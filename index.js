@@ -50,19 +50,48 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // معالجة نموذج الاتصال
+    // معالجة نموذج الاتصال وإرسال عبر الواتساب
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             // جمع بيانات النموذج
-            const formData = new FormData(this);
-            const name = this.querySelector('input[type="text"]').value;
-            const phone = this.querySelector('input[type="tel"]').value;
+            const name = document.getElementById('clientName').value;
+            const phone = document.getElementById('clientPhone').value;
+            const message = document.getElementById('clientMessage').value;
             
+            // التحقق من تعبئة الحقول المطلوبة
+            if (!name || !phone) {
+                alert('يرجى تعبئة الحقول المطلوبة (الاسم ورقم الهاتف)');
+                return;
+            }
+            
+            // إنشاء نص الرسالة
+            const whatsappMessage = `
+🎉 *طلب خدمة نقل أثاث جديد* 🎉
+
+👤 *الاسم:* ${name}
+📞 *رقم الهاتف:* ${phone}
+📝 *تفاصيل الخدمة:* ${message || 'لم يتم إضافة تفاصيل'}
+
+            `.trim();
+            
+            // ترميز النص للرابط
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            
+            // رقم الواتساب المستهدف
+            const whatsappNumber = '201070443421'; // يمكنك تغيير الرقم هنا
+            
+            // إنشاء رابط الواتساب
+            const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+            
+            // فتح الواتساب في نافذة جديدة
+            window.open(whatsappURL, '_blank');
+            
+            // إظهار رسالة تأكيد
             alert(`شكراً ${name}!
-            تم استلام طلبك بنجاح سنتواصل بك على الرقم ${phone} في أقرب وقت.`);
+سيتم فتح تطبيق الواتساب لإرسال طلبك.`);
             
             // إعادة تعيين النموذج
             this.reset();
@@ -93,20 +122,21 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(card);
     });
 });
-        // إضافة تأثيرات إضافية عند التمرير
-        document.addEventListener('DOMContentLoaded', function() {
-            const floatingButtons = document.querySelector('.floating-buttons');
-            
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 300) {
-                    floatingButtons.style.opacity = '1';
-                    floatingButtons.style.transform = 'translateY(0)';
-                }
-            });
 
-            // تأثير الظهور الأولي
-            setTimeout(() => {
-                floatingButtons.style.opacity = '1';
-                floatingButtons.style.transform = 'translateY(0)';
-            }, 1000);
-        });
+// إضافة تأثيرات إضافية عند التمرير
+document.addEventListener('DOMContentLoaded', function() {
+    const floatingButtons = document.querySelector('.floating-buttons');
+    
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            floatingButtons.style.opacity = '1';
+            floatingButtons.style.transform = 'translateY(0)';
+        }
+    });
+
+    // تأثير الظهور الأولي
+    setTimeout(() => {
+        floatingButtons.style.opacity = '1';
+        floatingButtons.style.transform = 'translateY(0)';
+    }, 1000);
+});
